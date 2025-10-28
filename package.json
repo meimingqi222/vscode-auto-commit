@@ -1,0 +1,115 @@
+{
+  "name": "vscode-auto-commit",
+  "displayName": "Auto Commit Message Generator",
+  "description": "使用 AI 自动生成 Git commit 消息",
+  "version": "0.0.1",
+  "publisher": "your-name",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/vscode-auto-commit"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:vscode-auto-commit.generateCommitMessage"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "vscode-auto-commit.generateCommitMessage",
+        "title": "生成 Commit 消息",
+        "icon": "$(sparkle)"
+      }
+    ],
+    "menus": {
+      "scm/title": [
+        {
+          "command": "vscode-auto-commit.generateCommitMessage",
+          "group": "navigation",
+          "when": "scmProvider == git"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Auto Commit Message",
+      "properties": {
+        "autoCommit.apiEndpoint": {
+          "type": "string",
+          "default": "https://api.deepseek.com/v1/chat/completions",
+          "description": "OpenAI 兼容的 API 端点"
+        },
+        "autoCommit.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "API Key (建议使用环境变量或安全存储)"
+        },
+        "autoCommit.model": {
+          "type": "string",
+          "default": "deepseek-chat",
+          "description": "模型名称"
+        },
+        "autoCommit.language": {
+          "type": "string",
+          "enum": ["auto", "zh-CN", "en", "ja", "ko", "es", "fr", "de", "ru"],
+          "enumDescriptions": [
+            "自动（跟随 VSCode 界面语言）",
+            "中文（简体）",
+            "English",
+            "日本語",
+            "한국어",
+            "Español",
+            "Français",
+            "Deutsch",
+            "Русский"
+          ],
+          "default": "auto",
+          "description": "Commit 消息的语言"
+        },
+        "autoCommit.prompt": {
+          "type": "string",
+          "default": "Generate a commit message following Conventional Commits specification.\n\nIMPORTANT: You MUST write the commit message in {language}. All text including type, scope, and description must be in {language}.\n\nFormat: <type>(<scope>): <description>\n\n[optional body with bullet points]\n\nTypes:\n- feat: New feature\n- fix: Bug fix\n- docs: Documentation\n- style: Code style\n- refactor: Code refactoring\n- perf: Performance\n- test: Testing\n- chore: Build/tooling\n\nRules:\n1. scope is optional\n2. description: concise, under 50 chars, no period\n3. For multiple changes, add body with \"- \" prefix per line\n\nGit diff:\n```\n{diff}\n```\n\nOutput language: {language}\nReturn ONLY the commit message in {language}, no explanation.",
+          "description": "生成 commit 消息的提示词模板，使用 {diff} 和 {language} 作为占位符",
+          "editPresentation": "multilineText"
+        },
+        "autoCommit.maxTokens": {
+          "type": "number",
+          "default": 500,
+          "description": "最大 token 数量"
+        },
+        "autoCommit.temperature": {
+          "type": "number",
+          "default": 0.3,
+          "description": "温度参数 (0-1)",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "node build.js",
+    "watch": "node build.js --watch",
+    "package": "node build.js --production",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/vscode": "^1.80.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "esbuild": "^0.25.11",
+    "eslint": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  }
+}
