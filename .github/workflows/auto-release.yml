@@ -8,6 +8,9 @@ on:
       - '.gitignore'
       - '.vscodeignore'
 
+permissions:
+  contents: write
+
 jobs:
   auto-release:
     runs-on: ubuntu-latest
@@ -35,6 +38,9 @@ jobs:
     - name: Install dependencies
       run: npm ci
       
+    - name: Install vsce globally
+      run: npm install -g @vscode/vsce
+      
     - name: Check for changes
       id: changes
       run: |
@@ -54,6 +60,16 @@ jobs:
       if: steps.changes.outputs.has_changes == 'true'
       run: |
         npm run build
+        
+    - name: Package extension
+      if: steps.changes.outputs.has_changes == 'true'
+      run: |
+        npx vsce package
+        
+    - name: List generated files
+      if: steps.changes.outputs.has_changes == 'true'
+      run: |
+        ls -la *.vsix
         
     - name: Create Release
       if: steps.changes.outputs.has_changes == 'true'

@@ -1,0 +1,47 @@
+name: Test Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Install vsce globally
+      run: npm install -g @vscode/vsce
+      
+    - name: Run linting
+      run: npm run lint
+      
+    - name: Compile TypeScript
+      run: npm run compile
+      
+    - name: Package extension
+      run: npx vsce package
+      
+    - name: List generated files
+      run: |
+        echo "Generated files:"
+        ls -la *.vsix || echo "No VSIX files found"
+        
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: vscode-extension
+        path: '*.vsix'
+        retention-days: 7
