@@ -3,10 +3,10 @@
   "displayName": "Auto Commit Message Generator",
   "description": "使用 AI 自动生成 Git commit 消息",
   "version": "0.0.1",
-  "publisher": "your-name",
+  "publisher": "meimingqi222",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/vscode-auto-commit"
+    "url": "https://github.com/meimingqi222/vscode-auto-commit.git"
   },
   "engines": {
     "vscode": "^1.80.0"
@@ -98,7 +98,14 @@
     "package": "node build.js --production",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "test": "node ./out/test/runTest.js",
+    "build": "node scripts/build.js",
+    "release": "node scripts/release.js",
+    "release:patch": "node scripts/release.js patch",
+    "release:minor": "node scripts/release.js minor",
+    "release:major": "node scripts/release.js major",
+    "release:push": "node scripts/release.js && git push origin main --follow-tags",
+    "version": "npm run release"
   },
   "devDependencies": {
     "@types/node": "^18.0.0",
@@ -107,7 +114,9 @@
     "@typescript-eslint/parser": "^6.0.0",
     "esbuild": "^0.25.11",
     "eslint": "^8.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "@vscode/vsce": "^2.22.0",
+    "semver": "^7.5.4"
   },
   "dependencies": {
     "axios": "^1.6.0"

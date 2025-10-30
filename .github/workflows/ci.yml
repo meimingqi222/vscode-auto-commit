@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18, 20]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run linting
+      run: npm run lint
+      
+    - name: Compile TypeScript
+      run: npm run compile
+      
+    - name: Run tests
+      run: npm test
+      
+    - name: Package extension (dry run)
+      run: npm run package
+      
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: vscode-extension-${{ matrix.node-version }}
+        path: vscode-auto-commit-*.vsix
+        retention-days: 7
