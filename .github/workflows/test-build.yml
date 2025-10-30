@@ -16,7 +16,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: '20'
         cache: 'npm'
         
     - name: Install dependencies
@@ -32,7 +32,7 @@ jobs:
       run: npm run compile
       
     - name: Package extension
-      run: npx vsce package
+      run: NODE_OPTIONS="--experimental-fetch" npx vsce package
       
     - name: List generated files
       run: |
