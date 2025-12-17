@@ -14,9 +14,6 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [
-    "onCommand:vscode-auto-commit.generateCommitMessage"
-  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
@@ -40,8 +37,8 @@
       "properties": {
         "autoCommit.apiEndpoint": {
           "type": "string",
-          "default": "https://api.deepseek.com/v1/chat/completions",
-          "description": "OpenAI 兼容的 API 端点"
+          "default": "https://api.deepseek.com",
+          "description": "OpenAI 兼容的 API 基地址"
         },
         "autoCommit.apiKey": {
           "type": "string",
@@ -96,6 +93,7 @@
     "compile": "node build.js",
     "watch": "node build.js --watch",
     "package": "node build.js --production",
+    "vsix": "vsce package",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",

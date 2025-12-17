@@ -51,7 +51,7 @@ vsce package
 
 ### 可选配置
 
-- **API Endpoint**: API 端点 URL（默认：`https://api.deepseek.com/v1/chat/completions`）
+- **API Endpoint**: API 基地址 URL（默认：`https://api.deepseek.com`）
 - **Model**: 模型名称（默认：`deepseek-chat`）
 - **Prompt**: 提示词模板（使用 `{diff}` 作为占位符）
 - **Max Tokens**: 最大 token 数量（默认：500）
@@ -88,7 +88,7 @@ Git diff:
 
 ```json
 {
-  "autoCommit.apiEndpoint": "https://api.openai.com/v1/chat/completions",
+  "autoCommit.apiEndpoint": "https://api.openai.com",
   "autoCommit.apiKey": "sk-your-openai-key",
   "autoCommit.model": "gpt-4"
 }

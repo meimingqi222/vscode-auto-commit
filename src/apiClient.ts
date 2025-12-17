@@ -35,7 +35,7 @@ export interface OpenAIResponse {
 export async function callOpenAIAPI(config: APIConfig): Promise<string> {
     try {
         const response = await axios.post<OpenAIResponse>(
-            config.apiEndpoint,
+            `${config.apiEndpoint}/v1/chat/completions`,
             {
                 model: config.model,
                 messages: [
@@ -62,7 +62,7 @@ export async function callOpenAIAPI(config: APIConfig): Promise<string> {
 
         const message = response.data.choices[0].message.content;
         return message;
-    } catch (error) {
+    } catch (error: any) {
         if (axios.isAxiosError(error)) {
             if (error.response) {
                 // 服务器返回了错误响应
