@@ -2,7 +2,7 @@
   "name": "vscode-auto-commit",
   "displayName": "Auto Commit Message Generator",
   "description": "使用 AI 自动生成 Git commit 消息",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "meimingqi222",
   "repository": {
     "type": "git",
