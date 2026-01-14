@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { GitExtension, Repository } from './git';
+import { GitExtension } from './git';
 import { generateCommitMessage } from './commitGenerator';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -26,7 +26,7 @@ export function activate(context: vscode.ExtensionContext) {
                 const repository = git.repositories[0];
 
                 // 检查是否有暂存的文件
-                if (repository.state.indexChanges.length === 0) {
+                if (!repository.state.indexChanges || repository.state.indexChanges.length === 0) {
                     vscode.window.showWarningMessage('没有暂存的文件，请先暂存要提交的更改');
                     return;
                 }
@@ -38,7 +38,7 @@ export function activate(context: vscode.ExtensionContext) {
                         title: '正在生成 Commit 消息...',
                         cancellable: false,
                     },
-                    async (progress) => {
+                    async () => {
                         try {
                             // 生成 commit 消息
                             const commitMessage = await generateCommitMessage(repository);

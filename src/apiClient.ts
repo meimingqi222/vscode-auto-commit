@@ -34,8 +34,15 @@ export interface OpenAIResponse {
  */
 export async function callOpenAIAPI(config: APIConfig): Promise<string> {
     try {
+        // 清理 API 端点，移除尾部的斜杠和 /v1/chat/completions 后缀
+        let cleanEndpoint = config.apiEndpoint.trim();
+        cleanEndpoint = cleanEndpoint.replace(/\/+$/, ''); // 移除尾部斜杠
+        cleanEndpoint = cleanEndpoint.replace(/\/v1\/chat\/completions\/?$/, ''); // 移除已有的后缀
+
+        const fullUrl = `${cleanEndpoint}/v1/chat/completions`;
+
         const response = await axios.post<OpenAIResponse>(
-            `${config.apiEndpoint}/v1/chat/completions`,
+            fullUrl,
             {
                 model: config.model,
                 messages: [

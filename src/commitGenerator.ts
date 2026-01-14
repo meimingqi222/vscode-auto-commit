@@ -43,7 +43,7 @@ async function getStagedDiff(repository: Repository): Promise<string> {
     try {
         const repoPath = repository.rootUri.fsPath;
         const { stdout } = await exec('git diff --cached', { cwd: repoPath, maxBuffer: 1024 * 1024 * 10 });
-        return stdout;
+        return stdout || '';
     } catch (error) {
         throw new Error(`获取 diff 失败: ${error instanceof Error ? error.message : '未知错误'}`);
     }
@@ -56,7 +56,7 @@ export async function generateCommitMessage(repository: Repository): Promise<str
     // 获取配置
     const config = vscode.workspace.getConfiguration('autoCommit');
     const apiKey = config.get<string>('apiKey') || process.env.DEEPSEEK_API_KEY || '';
-    
+
     if (!apiKey) {
         throw new Error('未配置 API Key，请在设置中配置或设置环境变量 DEEPSEEK_API_KEY');
     }
@@ -68,18 +68,19 @@ export async function generateCommitMessage(repository: Repository): Promise<str
     const temperature = config.get<number>('temperature') || 0.3;
     const language = getLanguage(config);
 
-    // 获取暂存区的 diff
-    const diff = await getStagedDiff(repository);
-    
-    if (!diff || diff.trim().length === 0) {
+    // 检查是否有暂存的文件（使用与 extension.ts 一致的检查方式）
+    if (!repository.state.indexChanges || repository.state.indexChanges.length === 0) {
         throw new Error('暂存区没有变更');
     }
 
+    // 获取暂存区的 diff
+    const diff = await getStagedDiff(repository);
+
     // 限制 diff 长度，避免超过 token 限制
     const maxDiffLength = 8000;
-    const truncatedDiff = diff.length > maxDiffLength 
+    const truncatedDiff = diff && diff.length > maxDiffLength
         ? diff.substring(0, maxDiffLength) + '\n\n...(内容过长，已截断)'
-        : diff;
+        : (diff || '');
 
     // 替换提示词中的占位符
     let prompt = promptTemplate.replace('{diff}', truncatedDiff);
