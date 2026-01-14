@@ -2,7 +2,7 @@
   "name": "vscode-auto-commit",
   "displayName": "Auto Commit Message Generator",
   "description": "使用 AI 自动生成 Git commit 消息",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "meimingqi222",
   "repository": {
     "type": "git",
@@ -52,7 +52,17 @@
         },
         "autoCommit.language": {
           "type": "string",
-          "enum": ["auto", "zh-CN", "en", "ja", "ko", "es", "fr", "de", "ru"],
+          "enum": [
+            "auto",
+            "zh-CN",
+            "en",
+            "ja",
+            "ko",
+            "es",
+            "fr",
+            "de",
+            "ru"
+          ],
           "enumDescriptions": [
             "自动（跟随 VSCode 界面语言）",
             "中文（简体）",
